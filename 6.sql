@@ -1,0 +1,25 @@
+select SYMBOL, DAY, sum(SELL), sum(BUY)
+FROM (
+select 
+TICKET,
+SYMBOL,
+DAYOFMONTH(OPEN_TIME) AS DAY,
+SIDE,
+VOLUME AS SELL,
+0 AS BUY
+from sample.trades
+where SIDE = 'SELL'
+union ALL
+select
+TICKET,
+SYMBOL,
+DAYOFMONTH(OPEN_TIME) AS DAY,
+SIDE,
+0 AS SELL,
+VOLUME AS BUY
+from sample.trades
+where SIDE = 'BUY'
+order by TICKET
+)derivedTable
+#GROUP BY SYMBOL
+GROUP BY DAY, SYMBOL;
